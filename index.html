@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Films distribués en Suisse de 2000 à 2025</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+  <h1 id="title">
+    Films distribués en Suisse de 2000 à 2025 par pays d'origine
+  </h1>
+
+  <div class="controls">
+    <input type="range" id="slider">
+    <span id="yearLabel"></span>
+  </div>
+
+  <h2 id="reference">
+    Source : Office fédéral de la statistique (OFS) - Statistique de la distribution cinématographique en Suisse
+  </h2>
+
+  <svg id="chart"></svg>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

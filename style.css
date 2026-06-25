@@ -1,0 +1,60 @@
+body {
+  font-family: Courier New, monospace;
+  text-align: center;
+  background-color: #bfbfbf;
+}
+
+.controls {
+  margin: 20px;
+}
+
+#slider {
+  width: 500px;
+}
+
+#reference {
+  font-size: 14px;
+  color: #333;
+  margin-top: 10px;
+}
+
+#yearLabel {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+#chart {
+  border: 1px solid #040404;
+}
+
+.continent-label {
+  font-size: 24px;
+  font-weight: bold;
+  fill: #333;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: bold;
+  fill: rgb(0, 0, 0);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.tooltip {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.866);
+    border: 1px solid #999;
+    border-radius: 5px;
+    padding: 8px;
+    pointer-events: none;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#chart {
+    margin-top: 20px;
+}
+
+
