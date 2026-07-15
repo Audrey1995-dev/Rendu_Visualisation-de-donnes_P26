@@ -10,6 +10,19 @@ const tooltip = d3.select("body")
   .attr("class", "tooltip")
   .style("opacity", 0);
 
+const barWidth = 1000;
+const barHeight = 420;
+
+const barMargin = {
+  top: 35,
+  right: 40,
+  bottom: 65,
+  left: 75
+};
+
+const barSvg = d3.select("#barChart")
+  .attr("viewBox", `0 0 ${barWidth} ${barHeight}`);
+
 function isAggregate(country) {
   return (
     country.startsWith("-") ||
@@ -65,11 +78,11 @@ const colors = {
 };
 
 const centers = {
-  Europe: { x: 600, y: 260 },
-  Amérique: { x: 600, y: 610 },
-  Asie: { x: 600, y: 960 },
-  Afrique: { x: 600, y: 1310 },
-  Océanie: { x: 600, y: 1660 }
+  Europe:   { x: 230, y: 230 },
+  Amérique: { x: 600, y: 230 },
+  Asie:     { x: 970, y: 230 },
+  Afrique:  { x: 410, y: 600 },
+  Océanie:  { x: 790, y: 600 }
 };
 
 function drawContinentLabels() {
@@ -85,6 +98,91 @@ function drawContinentLabels() {
 }
 
 drawContinentLabels();
+
+function updateBarChart(barData) {
+  const innerWidth =
+    barWidth - barMargin.left - barMargin.right;
+
+  const innerHeight =
+    barHeight - barMargin.top - barMargin.bottom;
+
+  const x = d3.scaleBand()
+    .domain(barData.map(d => d.continent))
+    .range([0, innerWidth])
+    .padding(0.25);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(barData, d => d.films) || 1])
+    .nice()
+    .range([innerHeight, 0]);
+
+  const chartGroup = barSvg
+    .selectAll(".bar-chart-group")
+    .data([null])
+    .join("g")
+    .attr("class", "bar-chart-group")
+    .attr(
+      "transform",
+      `translate(${barMargin.left},${barMargin.top})`
+    );
+
+  // Axe horizontal
+  chartGroup.selectAll(".x-axis")
+    .data([null])
+    .join("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(d3.axisBottom(x));
+
+  // Axe vertical
+  chartGroup.selectAll(".y-axis")
+    .data([null])
+    .join("g")
+    .attr("class", "y-axis")
+    .call(d3.axisLeft(y).ticks(6));
+
+  // Barres
+  const bars = chartGroup
+    .selectAll(".bar")
+    .data(barData, d => d.continent);
+
+  bars.exit().remove();
+
+  bars.enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", d => x(d.continent))
+    .attr("width", x.bandwidth())
+    .attr("y", innerHeight)
+    .attr("height", 0)
+    .attr("fill", d => colors[d.continent])
+    .merge(bars)
+    .transition()
+    .duration(600)
+    .attr("x", d => x(d.continent))
+    .attr("width", x.bandwidth())
+    .attr("y", d => y(d.films))
+    .attr("height", d => innerHeight - y(d.films))
+    .attr("fill", d => colors[d.continent]);
+
+  // Valeurs au-dessus des barres
+  const values = chartGroup
+    .selectAll(".bar-value")
+    .data(barData, d => d.continent);
+
+  values.exit().remove();
+
+  values.enter()
+    .append("text")
+    .attr("class", "bar-value")
+    .attr("text-anchor", "middle")
+    .merge(values)
+    .transition()
+    .duration(600)
+    .attr("x", d => x(d.continent) + x.bandwidth() / 2)
+    .attr("y", d => y(d.films) - 8)
+    .text(d => d.films);
+}
 
 d3.json("data-simple.json").then(data => {
 
@@ -110,6 +208,16 @@ function update(year) {
       d.radius = radiusScale(d.films);
       d.continent = getContinent(d.pays);
     });
+
+    const totalsByContinent = Object.keys(continents).map(continent => ({
+    continent: continent, films: d3.sum(
+    yearData.filter(d => d.continent === continent),
+    d => d.films
+     )
+    }));
+
+    updateBarChart(totalsByContinent);
+
     const simulation = d3.forceSimulation(yearData)
       .force("x", d3.forceX(d => centers[d.continent].x).strength(0.18))
       .force("y", d3.forceY(d => centers[d.continent].y).strength(0.18))

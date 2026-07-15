@@ -43,6 +43,9 @@ La mise en forme (couleurs, occupation de l'espace) a volontairement été laiss
 
 L'intérêt est de pouvoir comparer les pays entre eux mais également au cours du temps à l'aide du curseur temporel et de se rendre compte de la représentation des différentes cultures dans les films qui passent sur les écrans de cinéma en Suisse. Le fait d'avoir regroupé les pays par continent permet de se rendre compte des différences de représentation entre ceux-ci. 
 
+## Aperçu de la visualisation
+![Visualisation](images/visualisation.png)
+
 6. Déclaration d'utilisation d'IA générative
 Une IA générative a été utilisée en tant que support pour coder la visualisation.
 Il est difficile de déterminer quelles lignes de codes exactement ont été élaborées par une IA : un processus itératif ayant été mis en place. L'IA a principalement servi à proposer des manières de coder selon le résultat désiré et à résoudre des problèmes. Tous les extraits de code proposés par l'IA ont été testés, adaptés et finalement intégrés au projet après vérification.
